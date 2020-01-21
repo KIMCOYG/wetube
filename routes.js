@@ -48,21 +48,21 @@ const routes = {
             return VIDEO_DETAIL;
         }
     },
-    // editVideo: id => {
-    //     if(id){
-    //         return `/videos/${id}/edit`;
-    //     } else {
-    //         return DELETE_VIDEO;
-    //     }
-    // },
-    // dleteVideo: id => {
-    //     if(id){
-    //         return `/videos/${id}/delete`;
-    //     } else {
-    //         return DELETE_VIDEO;
-    //     }
-    // }
-    editVideo: EDIT_VIDEO,
+    editVideo: id => {
+        if(id){
+            return `/videos/${id}/edit`;
+        } else {
+            return EDIT_VIDEO;
+        }
+    },
+    /* dleteVideo: id => {
+        if(id){
+            return `/videos/${id}/delete`;
+        } else {
+            return DELETE_VIDEO;
+        }
+    } */
+    // editVideo: EDIT_VIDEO,
     deleteVideo: DELETE_VIDEO
 };
 

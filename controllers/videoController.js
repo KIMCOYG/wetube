@@ -35,7 +35,7 @@ export const postUpload = async(req, res) => {
     res.redirect(routes.videoDetail(newVideo.id)); //이 부분이 이해안됨
 }
 
-export const videoDetail = async(req, res) => {
+export const videoDetail = async(req, res) => { //이해안됨
     const {
         params: {id}
     } = req;
@@ -48,5 +48,31 @@ export const videoDetail = async(req, res) => {
         res.redirect(routes.home);
     }
 }
-export const editVideo = (req, res) => res.render("editVideo", {pageTitle: "Edit Video"});
+export const getEditVideo = async(req, res) => {
+    const {
+        params: {id}
+    } = req;
+
+    try{
+        const video = await Video.findById(id);
+        res.render("editVideo", {pageTitle: `Edit ${video.title}`, video})
+    } catch(error){
+        res.redirect(routes.home);
+    }
+}
+
+export const postEditVideo = async(req, res) => {
+    const {
+        params: {id},
+        body: {title, description}
+    } = req;
+    
+    try{
+        await Video.findOneAndUpdate({_id: id}, {title, description});
+        res.redirect(routes.videoDetail(id));
+    } catch(error){
+        res.redirect(routes.home); //middleware를 통해 error 발생 시 try catch를 실행 가능
+    }
+}
+
 export const deleteVideo = (req, res) => res.render("deleteVideo", {pageTitle: "Delete Video"});
