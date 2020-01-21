@@ -1,5 +1,5 @@
 // import {videos} from "../db"
-import routes from "../routes"
+import routes from "../routes";
 import Video from "../models/Video";
 
 export const home = async(req, res) => { //async, awiat 같이 씀 작업이 끝날 때까지 js가 잠시 기다리게 함
@@ -12,10 +12,19 @@ export const home = async(req, res) => { //async, awiat 같이 씀 작업이 끝
     }
 }; //두 번째 arg는 template에 추가할 정보가 담긴 객체
 
-export const search = (req, res) => {
+export const search = async(req, res) => {
     const {
         query: {term: searchingBy}
     } = req;
+    let videos = [];
+
+    try{
+        videos = await Video.find({
+            title: {$regex: searchingBy, $options: "i"} //i 의미: 대소문자 구분안함
+        });
+    } catch(error){
+        console.log(error);
+    }
     res.render("search", {pageTitle: "Search", searchingBy, videos});
 }
 
