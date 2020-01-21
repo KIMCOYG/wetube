@@ -42,7 +42,7 @@ export const videoDetail = async(req, res) => { //이해안됨
     
     try{
         const video = await Video.findById(id);
-        res.render("videoDetail", {pageTitle: "Video Detail", video});
+        res.render("videoDetail", {pageTitle: video.title, video});
     } catch(error){
         // console.log(error);
         res.redirect(routes.home);
@@ -73,6 +73,15 @@ export const postEditVideo = async(req, res) => {
     } catch(error){
         res.redirect(routes.home); //middleware를 통해 error 발생 시 try catch를 실행 가능
     }
-}
+};
 
-export const deleteVideo = (req, res) => res.render("deleteVideo", {pageTitle: "Delete Video"});
+export const deleteVideo = async(req, res) => {
+    const {
+        params: {id}
+    } = req;
+
+    try{
+        await Video.findOneAndRemove({_id: id});
+    } catch(error){}
+    res.redirect(routes.home);
+};
