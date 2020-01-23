@@ -7,10 +7,18 @@ const ENTRY_FILE = path.resolve(__dirname, "assets", "js", "main.js"); //(현재
 const OUTPUT_DIR = path.join(__dirname, "static");
 
 const config = {
-    entry: ENTRY_FILE,
+    entry: ["@babel/polyfill", ENTRY_FILE],
     mode: MODE,
     module: {
         rules: [
+            {
+                test: /\.(js)$/,
+                use: [
+                    {
+                        loader:'babel-loader'
+                    }
+                ]
+            },
             {
                 test: /\.(scss)$/,
                 use: ExtractCSS.extract([//webpack은 아래에서 위로 실행
@@ -20,7 +28,7 @@ const config = {
                     {
                         loader: "postcss-loader",
                         options: {
-                            plugin() {
+                            plugins() {
                                 return [autoprefixer({browsers: "cover 99.5%"})];
                             }
                         }
