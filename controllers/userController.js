@@ -1,3 +1,4 @@
+import passport from "passport";
 import routes from "../routes";
 import User from "../models/User";
 
@@ -5,7 +6,7 @@ export const getJoin = (req, res) => {
     res.render("join", {pageTitle: "Join"});
 };
 
-export const postJoin = async(req, res) => {
+export const postJoin = async(req, res, next) => {//middleware
     const {
         body: {name, email, password, password2}
     } = req;
@@ -20,20 +21,22 @@ export const postJoin = async(req, res) => {
                 email
             });
             await User.register(user, password);
+            next();
         } catch(error){
             console.log(error);
+            res.redirect(routes.home);
         }
         // To Do: Log user in
-        res.redirect(routes.home);
     }
 };
 
 export const getLogin = (req, res) => 
     res.render("login", {pageTitle: "Log In"});
-export const postLogin = (req, res) => {
-    //비밀번호 검사 필요
-    res.redirect(routes.home);
-}
+
+export const postLogin = passport.authenticate('local', { //username, password 찾아보도록 설정
+    failureRedirect: routes.login,
+    successRedirect: routes.home
+});
 
 export const logout = (req, res) => {
     // To Do: Process Log Out
