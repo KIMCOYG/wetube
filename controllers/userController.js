@@ -57,7 +57,7 @@ export const githubLoginCallback = async(_, __, profile, cb) => {
             githubId: id,
             avatarUrl
         });
-            return cb(null, newUser);
+        return cb(null, newUser);
     }catch(error){
         return cb(error);
     }
@@ -86,7 +86,7 @@ export const getMe = (req, res) => {
     res.render("userDetail", {pagetItitle: "User Detail", user: req.user});s
 }
 
-export const userDetail = async(req, res) => {
+/* export const userDetail = async(req, res) => {
     const {params: {id}} = req;
     try{
         const user = await User.findById(id);
@@ -94,6 +94,7 @@ export const userDetail = async(req, res) => {
     } catch(error){
         res.redirect(routes.home);
     }
-}
+} */
+export const userDetail = (req, res) => res.render("userDetail", {pageTitle: "User Detail"}); //user
 export const editProfile = (req, res) => res.render("editProfile", {pageTitle: "Edit Profile"});
 export const changePassword = (req, res) =>res.render("changePassword", {pageTitle: "Change Password"});

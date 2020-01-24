@@ -20,20 +20,18 @@ passport.use(
     )
 );
 
-passport.use(
+/* passport.use(
     new FacebookStrategy(
     {
         clientID: process.env.FB_ID,
         clientSecret: process.env.FB_SECRET,
-        /* clientID: "246712722979317",
-        clientSecret: "1c4d6b79a395273d0d2fa20060ea8673", */
         callbackURL: `http://localhost:4000${routes.facebookCallback}`
     },
     facebookLoginCallback
     )
-);
+); */
 
-/* passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser()); */
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+/* passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user)); */
