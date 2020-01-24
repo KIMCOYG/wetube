@@ -25,11 +25,11 @@ globalRouter.get(routes.githubCallback,
 
 globalRouter.get(routes.me, getMe);
 
-/* globalRouter.get(routes.facebook, facebookLogin);
+globalRouter.get(routes.facebook, facebookLogin);
 globalRouter.get(
     routes.facebookCallback, 
     passport.authenticate("facebook", {failureRedirect: "/login"}),
     postFacebookLogin    
-); */
+);
 
 export default globalRouter;
