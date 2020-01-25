@@ -113,3 +113,21 @@ export const deleteVideo = async(req, res) => {
     }
     res.redirect(routes.home);
 };
+
+//Register Video View
+
+export const registerView = async(req, res) => {
+    try{
+        const{ //이해안됨 데이터 받아오는 방식
+            params: {id}
+        } = req;
+        const video = await Video.findById(id);
+        video.views += 1;
+        video.save();
+        res.status(200); //okay
+    } catch(error){
+        res.status(400);
+    } finally{
+        res.end();
+    }
+}
