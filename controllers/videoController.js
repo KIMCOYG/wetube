@@ -7,7 +7,7 @@ export const home = async(req, res) => { //async, awiat 같이 씀 작업이 끝
         const videos = await Video.find({}).sort({_id: -1}); //await 끝나기 전까지 밑 부분 실행 안함
         res.render("home", {pageTitle: "Home", videos});
     } catch(error){
-        console.log(error);
+        // console.log(error);
         res.render("home", {pageTitle: "Home", videos: []});
     }
 }; //두 번째 arg는 template에 추가할 정보가 담긴 객체
@@ -23,7 +23,7 @@ export const search = async(req, res) => {
             title: {$regex: searchingBy, $options: "i"} //i 의미: 대소문자 구분안함
         });
     } catch(error){
-        console.log(error);
+        // console.log(error);
     }
     res.render("search", {pageTitle: "Search", searchingBy, videos});
 }
@@ -56,7 +56,7 @@ export const videoDetail = async(req, res) => { //이해안됨
     
     try{
         const video = await Video.findById(id).populate("creator"); //populate is only object
-        console.log(video);
+        // console.log(video);
         res.render("videoDetail", {pageTitle: video.title, video});
     } catch(error){
         // console.log(error);
@@ -71,8 +71,12 @@ export const getEditVideo = async(req, res) => {
 
     try{
         const video = await Video.findById(id);
-        res.render("editVideo", {pageTitle: `Edit ${video.title}`, video})
-    } catch(error){
+        if(video.creator !== req.user.id){
+            throw Error();
+        } else{
+            res.render("editVideo", {pageTitle: `Edit ${video.title}`, video});
+        }
+    } catch(error){ 
         res.redirect(routes.home);
     }
 }
@@ -97,7 +101,12 @@ export const deleteVideo = async(req, res) => {
     } = req;
 
     try{
-        await Video.findOneAndRemove({_id: id});
+        const video = await Video.findById(id);
+        if(video.creator !== req.user.id){
+            throw Error();
+        } else{
+            await Video.findOneAndRemove({_id: id});
+        }
     } catch(error){
         console.log(error);
     }
