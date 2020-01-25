@@ -109,7 +109,7 @@ export const getMe = (req, res) => {
 export const userDetail = async(req, res) => {
     const {params: {id}} = req;
     try{
-        const user = await User.findById(id); //.populated("videos")
+        const user = await User.findById(id).populate("videos"); //.populated("videos")
         console.log(user);
         res.render("userDetail", {pageTitle: "User Detail", user});
     } catch(error){
