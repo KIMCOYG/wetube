@@ -3,17 +3,34 @@ const recordBtn = document.getElementById("jsRecordBtn");
 const videoPreview = document.getElementById("jsVideoPreview");
 
 let streamObject;
+let videoRecorder;
 
-const handleVideoData = (event) => {
-    console.log(event);
+const handleVideoData = event => {
+    // console.log(event);
+    const {data: videoFile} = event;
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(videoFile);
+    link.download = "recored.webm";
+    document.body.appendChild(link);
+    link.click();
 }
 
 const startRecording = () => {
     // console.log(streamObject);
-    const videoRecorder = new MediaRecorder(streamObject);
+    videoRecorder = new MediaRecorder(streamObject);
     videoRecorder.start();
     // console.log(videoRecorder);
     videoRecorder.addEventListener("dataavailable", handleVideoData);
+    // setTimeout(() => videoRecorder.stop(), 5000);
+    recordBtn.addEventListener("click", stopRecording);
+};
+
+const stopRecording = () => {
+    videoRecorder.stop();
+    recordBtn.removeEventListener("click", stopRecording);
+    recordBtn.addEventListener("click", getVideo); //stopRecording에서도 getVideo가 실행되나??
+    recordBtn.innerHTML = "Start recording"
+    streamObject.getVideoTracks()[0].stop();
 }
 
 const getVideo = async() => {
@@ -32,7 +49,7 @@ const getVideo = async() => {
     } catch(error){
         recordBtn.innerHTML = "Can't record";
     } finally{
-        recordBtn.removeEventListener("click", getVideo);
+        recordBtn.removeEventListener("click", getVideo); //reference
     }
 }
 
