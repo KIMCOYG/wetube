@@ -1,6 +1,7 @@
 // import {videos} from "../db"
 import routes from "../routes";
 import Video from "../models/Video";
+import Comment from "../models/Comment";
 
 export const home = async(req, res) => { //async, awiat 같이 씀 작업이 끝날 때까지 js가 잠시 기다리게 함
     try{
@@ -55,7 +56,9 @@ export const videoDetail = async(req, res) => { //이해안됨
     } = req;
     
     try{
-        const video = await Video.findById(id).populate("creator"); //populate is only object
+        const video = await Video.findById(id)
+            .populate("creator") //populate is only object
+            .populate("comments");
         // console.log(video);
         res.render("videoDetail", {pageTitle: video.title, video});
     } catch(error){
@@ -116,7 +119,7 @@ export const deleteVideo = async(req, res) => {
 
 //Register Video View
 
-export const registerView = async(req, res) => {
+export const postRegisterView = async(req, res) => {
     try{
         const{ //이해안됨 데이터 받아오는 방식
             params: {id}
@@ -125,6 +128,30 @@ export const registerView = async(req, res) => {
         video.views += 1;
         video.save();
         res.status(200); //okay
+    } catch(error){
+        res.status(400);
+    } finally{
+        res.end();
+    }
+};
+
+//Add Comment
+
+export const postAddComment = async(req, res) => {
+    const{
+        params: {id}, //url
+        body: {comment}, //body
+        user //어디서 가져온거지?
+    } = req;
+
+    try{
+        const video = await Video.findById(id);
+        const newCommeent = await Comment.create({
+            text: comment,
+            creator: user.id
+        });
+        video.comments.push(newCommeent.id);
+        video.save();
     } catch(error){
         res.status(400);
     } finally{
