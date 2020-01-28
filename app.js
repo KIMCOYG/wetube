@@ -7,6 +7,7 @@ import passport from "passport";
 import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import flash from "flash-express";
 import { localsMiddelware } from "./middlewares";
 import routes from "./routes";
 import userRouter from "./routers/userRouter";
@@ -35,6 +36,7 @@ app.use(session({
     store: new CokieStore({mongooseConnection: mongoose.connection})
     })
 );
+app.use(flash());
 app.use(passport.initialize()); //passport 초기화
 app.use(passport.session()); 
 //passport가 스스로 쿠키 보고 쿠키 정보에 해당하는 사용자를 찾아줌, 자기가 찾은 사용자를 request의 객체, req.user로 만듦
